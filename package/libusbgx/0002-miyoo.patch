@@ -112,7 +112,7 @@ index a5c6681..a9f1b7c 100644
  		 * When id in lun structure is below 0 we can place it in any
  		 * arbitrary position
  		 */
-+		&f_ms_luns_array[2]
++		&f_ms_luns_array[2],
  		&f_ms_luns_array[1],
  		&f_ms_luns_array[0],
  		NULL,
