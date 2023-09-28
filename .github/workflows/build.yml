@@ -36,7 +36,7 @@ jobs:
     - name: build
       run: |
         cd ${{ inputs.submodule || '.' }}
-        sudo apt-get update && sudo apt-get install -y wget unzip build-essential git bc swig libncurses-dev libpython3-dev libssl-dev cpio rsync subversion autogen autoconf libtool autoconf-archive
+        sudo apt-get update && sudo apt-get install -y wget unzip build-essential git bc swig libncurses-dev libpython3-dev libssl-dev cpio rsync subversion autogen autoconf libtool autoconf-archive m4
         make miyoo_uclibc_defconfig
         make sdk CFW_HASH="${{ steps.cfwsha.outputs.cfwsha }}"
  
