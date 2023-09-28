@@ -10,7 +10,7 @@ MIMIC_LICENSE = MIT
 MIMIC_LICENSE_FILES = COPYING
 
 +MIMIC_AUTORECONF = YES
-+MIMIC_DEPENDENCIES = host-pkgconf host-automake host-autoconf host-libtool host-autoconf-archive
++MIMIC_DEPENDENCIES = host-pkgconf host-automake host-m4 host-autoconf host-libtool host-autoconf-archive
 
 ifeq ($(BR2_PACKAGE_MIMIC_AUDIO_BACKEND_ALSA),y)
 MIMIC_AUDIO_BACKEND = alsa
