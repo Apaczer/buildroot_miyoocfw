@@ -1,4 +1,0 @@
-title=bluemsx
-description=bluemsx libretro core
-exec=/mnt/emus/retroarch/bluemsx.sh
-selectordir=/mnt

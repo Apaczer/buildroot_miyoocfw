@@ -22,17 +22,15 @@ if test -d "${BINARIES_DIR}/retroarch";then
 	CORES_DIR="${BINARIES_DIR}/retroarch/cores"
 	for file in $CORES_DIR/*; do
 		if test -f "$file"; then
-			RA_WDIR="${BINARIES_DIR}/main/emus/retroarch"
 			CORE_FILE="$(echo "$file" | sed 's/.*\///')"
 			CORE_NAME="$(echo "${CORE_FILE}" | sed 's/_libretro.so//g')"
-			CORE_SCRIPT="${CORE_NAME}.sh"
-			touch $RA_WDIR/"${CORE_SCRIPT}" 
-			echo -e "#!/bin/sh\n/mnt/emus/retroarch/retroarch -L ${CORE_FILE} \"\$1\"" > $RA_WDIR/"${CORE_SCRIPT}"
-			chmod +x $RA_WDIR/"${CORE_SCRIPT}"
-			# RA_LDIR="${BINARIES_DIR}/main/gmenu2x/sections/cores"
-			# CORE_LINK="zblank.${CORE_NAME}.ra"
-			# touch $RA_LDIR/"${CORE_LINK}"
-			# echo -e "title=${CORE_NAME}\ndescription=${CORE_NAME} libretro core\nexec=/mnt/emus/retroarch/${CORE_SCRIPT}\nselectordir=/mnt" > $RA_LDIR/"${CORE_LINK}"
+			RA_LDIR="${BINARIES_DIR}/main/gmenu2x/sections/cores"
+			test -d $RA_LDIR || mkdir $RA_LDIR
+			CORE_LINK="${CORE_NAME}.ra"
+			if ! (test -e $RA_LDIR/"*${CORE_LINK}"); then
+				touch $RA_LDIR/"zblank.${CORE_LINK}"
+				echo -e "title=${CORE_NAME}\ndescription=${CORE_NAME} libretro core\nexec=/mnt/emus/retroarch/retroarch\nparams=-vL ${CORE_NAME}\nselectordir=/mnt" > $RA_LDIR/"${CORE_LINK}"
+			fi
 		fi
 	done
 fi

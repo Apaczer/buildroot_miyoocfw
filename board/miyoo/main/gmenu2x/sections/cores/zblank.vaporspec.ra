@@ -1,4 +1,0 @@
-title=vaporspec
-description=vaporspec libretro core
-exec=/mnt/emus/retroarch/vaporspec.sh
-selectordir=/mnt

@@ -1,4 +1,0 @@
-title=ecwolf
-description=ecwolf libretro core
-exec=/mnt/emus/retroarch/ecwolf.sh
-selectordir=/mnt

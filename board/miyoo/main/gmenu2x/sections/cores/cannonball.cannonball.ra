@@ -1,3 +1,4 @@
 title=cannonball
 description=cannonball libretro core
-exec=/mnt/emus/retroarch/cannonball.sh
+exec=/mnt/emus/retroarch/retroarch
+params=-vL cannonball

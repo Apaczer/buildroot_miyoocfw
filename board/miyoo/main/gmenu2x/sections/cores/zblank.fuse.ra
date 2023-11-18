@@ -1,4 +1,0 @@
-title=fuse
-description=fuse libretro core
-exec=/mnt/emus/retroarch/fuse.sh
-selectordir=/mnt
