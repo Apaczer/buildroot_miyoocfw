@@ -1,0 +1,48 @@
+Subject: [PATCH] use mount(8) cmd to enable read-write on root
+
+Signed-off-by: Apaczer <94932128+Apaczer@users.noreply.github.com>
+---
+ libopkg/file_util.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+diff --git a/libopkg/file_util.c b/libopkg/file_util.c
+index ee9f59d..22b269a 100644
+--- a/libopkg/file_util.c
++++ b/libopkg/file_util.c
+@@ -335,6 +335,7 @@ int file_mkdir_hier(const char *path, long mode)
+ {
+     struct stat st;
+     int r;
++    char* cmd;
+ 
+     /* Default mode only permits user access */
+     if (mode == -1) {
+@@ -354,6 +355,12 @@ int file_mkdir_hier(const char *path, long mode)
+             return -1;
+ 
+         /* mode will be further constrained by the process umask */
++        cmd = "mount -o remount,rw /";
++        if (system(cmd) == -1) {
++            opkg_perror(ERROR, "Can not mount root partition in RW mode");
++            return -1;
++        }
++
+         r = mkdir(path, mode);
+         if (r < 0) {
+             opkg_perror(ERROR, "Cannot create directory `%s'", path);
+@@ -370,6 +377,12 @@ int file_mkdir_hier(const char *path, long mode)
+                         path);
+             return -1;
+         }
++
++        cmd = "mount -o remount,ro /";
++        if (system(cmd) == -1) {
++            opkg_perror(ERROR, "Can not mount root partition in RDONLY mode");
++            return -1;
++        }
+     }
+ 
+     return 0;
+-- 
+2.43.0.windows.1
+
