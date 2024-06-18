@@ -1,4 +1,4 @@
-From a65e5d3caf8e076d531191164c23c6240461f675 Mon Sep 17 00:00:00 2001
+From e6284624679a525440dc4bfddc1347f8add22fd8 Mon Sep 17 00:00:00 2001
 From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Date: Wed, 22 Feb 2017 17:07:56 -0800
 Subject: [PATCH] Add an option to disable pydoc
@@ -12,6 +12,8 @@ Signed-off-by: Samuel Martin <s.martin49@gmail.com>
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 [ Adam Duskett: ported to Python 3.10.0 ]
 Signed-off-by: Adam Duskett <aduskett@gmail.com>
+[ Vincent Fazio: fix scripts array to reflect upstream ]
+Signed-off-by: Vincent Fazio <vfazio@gmail.com>
 ---
  Makefile.pre.in | 7 ++++++-
  configure.ac    | 6 ++++++
@@ -19,10 +21,10 @@ Signed-off-by: Adam Duskett <aduskett@gmail.com>
  3 files changed, 19 insertions(+), 3 deletions(-)
 
 diff --git a/Makefile.pre.in b/Makefile.pre.in
-index c0d5511..32b3df7 100644
+index 5a40b7c548..e87bc1fcd3 100644
 --- a/Makefile.pre.in
 +++ b/Makefile.pre.in
-@@ -1391,7 +1391,9 @@ bininstall: altbininstall
+@@ -1877,7 +1877,9 @@ bininstall: commoninstall altbininstall
  	-rm -f $(DESTDIR)$(BINDIR)/idle3
  	(cd $(DESTDIR)$(BINDIR); $(LN) -s idle$(VERSION) idle3)
  	-rm -f $(DESTDIR)$(BINDIR)/pydoc3
@@ -32,32 +34,32 @@ index c0d5511..32b3df7 100644
  	-rm -f $(DESTDIR)$(BINDIR)/2to3
  	(cd $(DESTDIR)$(BINDIR); $(LN) -s 2to3-$(VERSION) 2to3)
  	if test "x$(LIPO_32BIT_FLAGS)" != "x" ; then \
-@@ -1442,7 +1444,6 @@ LIBSUBDIRS=	asyncio \
+@@ -1928,7 +1930,6 @@ LIBSUBDIRS=	asyncio \
  		lib2to3 lib2to3/fixes lib2to3/pgen2 \
  		logging \
  		multiprocessing multiprocessing/dummy \
 -		pydoc_data \
+ 		re \
  		site-packages \
  		sqlite3 \
- 		tkinter \
-@@ -1530,6 +1531,10 @@ TESTSUBDIRS=	ctypes/test \
- 		tkinter/test/test_ttk \
- 		unittest/test unittest/test/testmock
+@@ -2069,6 +2070,10 @@ TESTSUBDIRS=	ctypes/test \
+ 		unittest/test \
+ 		unittest/test/testmock
  
 +ifeq (@PYDOC@,yes)
 +LIBSUBDIRS += pydoc_data
 +endif
 +
  TEST_MODULES=@TEST_MODULES@
- libinstall:	build_all $(srcdir)/Modules/xxmodule.c
+ libinstall:	all $(srcdir)/Modules/xxmodule.c
  	@for i in $(SCRIPTDIR) $(LIBDEST); \
 diff --git a/configure.ac b/configure.ac
-index 083a12d..9079531 100644
+index b4d7d2cca6..d56d8f9d1c 100644
 --- a/configure.ac
 +++ b/configure.ac
-@@ -3373,6 +3373,12 @@ if test "$posix_threads" = "yes"; then
-       AC_CHECK_FUNCS(pthread_getcpuclockid)
- fi
+@@ -4222,6 +4222,12 @@ AS_VAR_IF([posix_threads], [stub], [
+   AC_DEFINE([HAVE_PTHREAD_STUBS], [1], [Define if platform requires stubbed pthreads support])
+ ])
  
 +AC_SUBST(PYDOC)
 +
@@ -65,27 +67,27 @@ index 083a12d..9079531 100644
 +	AS_HELP_STRING([--disable-pydoc], [disable pydoc]),
 +	[ PYDOC="${enableval}" ], [ PYDOC=yes ])
 +
- 
  # Check for enable-ipv6
  AH_TEMPLATE(ENABLE_IPV6, [Define if --enable-ipv6 is specified])
+ AC_MSG_CHECKING([if --enable-ipv6 is specified])
 diff --git a/setup.py b/setup.py
-index d00d389..d23f148 100644
+index 53b066cb18..25e6f4fc26 100644
 --- a/setup.py
 +++ b/setup.py
-@@ -2721,6 +2721,12 @@ def main():
+@@ -1597,6 +1597,12 @@ class DummyProcess:
      # turn off warnings when deprecated modules are imported
      import warnings
      warnings.filterwarnings("ignore",category=DeprecationWarning)
 +
-+    scripts = ['Tools/scripts/idle3', 'Tools/scripts/2to3',
-+               'Lib/smtpd.py']
++    scripts = ['Tools/scripts/idle3', 'Tools/scripts/2to3']
++
 +    if not '--disable-pydoc' in sysconfig.get_config_var("CONFIG_ARGS"):
 +        scripts += [ 'Tools/scripts/pydoc3' ]
 +
      setup(# PyPI Metadata (PEP 301)
            name = "Python",
            version = sys.version.split()[0],
-@@ -2746,8 +2752,7 @@ def main():
+@@ -1621,8 +1627,7 @@ class DummyProcess:
            # If you change the scripts installed here, you also need to
            # check the PyBuildScripts command above, and change the links
            # created by the bininstall target in Makefile.pre.in
@@ -96,5 +98,5 @@ index d00d389..d23f148 100644
  
  # --install-platlib
 -- 
-2.30.2
+2.34.1
 
