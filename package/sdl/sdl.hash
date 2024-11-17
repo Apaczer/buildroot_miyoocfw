@@ -1,4 +1,3 @@
-# Locally calculated after checking pgp signature
-sha256  d6d316a793e5e348155f0dd93b979798933fb98aa1edebcc108829d6474aad00  SDL-1.2.15.tar.gz
-# Locally computed
+# Locally calculated
+sha256  e548b37b8451f21ce36de00f19e459c8c5bd3b6d33a171b3d761f4cc432abe34  sdl-d41920c8efad1e78c7abcb8427f9e92d72780ab9-br1.tar.gz
 sha256  bb117c0fbd7f57f64170b690285d7df07c2371b578e3b3cd3aa2e1155ef461a0  COPYING
