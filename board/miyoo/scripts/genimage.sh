@@ -66,6 +66,7 @@ test -d "${BINARIES_DIR}/emus" && cp -r "${BINARIES_DIR}/emus/" "${BINARIES_DIR}
 test -d "${BINARIES_DIR}/apps" && cp -r "${BINARIES_DIR}/apps/" "${BINARIES_DIR}/main/"
 test -d "${BINARIES_DIR}/games" && cp -r "${BINARIES_DIR}/games/" "${BINARIES_DIR}/main/"
 if test -d "${BINARIES_DIR}/retroarch"; then
+	#cp -r "${BINARIES_DIR}/retroarch/" "${BINARIES_DIR}/main/"
 	rsync -avzh "${BINARIES_DIR}/retroarch/" "${BINARIES_DIR}/main/.retroarch/"
 	## Generate list of cores to be used
 	CORES_DIR="${BINARIES_DIR}/retroarch/cores"
@@ -77,6 +78,7 @@ if test -d "${BINARIES_DIR}/retroarch"; then
 			CORE_SCRIPT="${CORE_NAME}.sh"
 			touch $RA_WDIR/"${CORE_SCRIPT}"
 			echo -e "#!/bin/sh\n/mnt/emus/retroarch/retroarch -L ${CORE_FILE} \"\$1\"" > $RA_WDIR/"${CORE_SCRIPT}"
+			# This does not work for ext4 (see firstboot)
 			chmod +x $RA_WDIR/"${CORE_SCRIPT}"
 			# RA_LDIR="${BINARIES_DIR}/main/gmenu2x/sections/cores"
 			# CORE_LINK="zblank.${CORE_NAME}.ra"
@@ -86,9 +88,10 @@ if test -d "${BINARIES_DIR}/retroarch"; then
 	done
 fi
 
-# Generate MAIN BTRFS partition
+# Generate MAIN ext4 file & partition
 image="${BINARIES_DIR}/main.img"
 label="MAIN"
-mkfs.btrfs -r "${BINARIES_DIR}/main/" --shrink -v -f -L ${label} ${image}
+dd if=/dev/zero of=${image} bs=1M count=800
+mkfs.ext4 -d "${BINARIES_DIR}/main/" -v -L ${label} ${image}
 
 support/scripts/genimage.sh ${1} -c board/miyoo/genimage-sdcard.cfg

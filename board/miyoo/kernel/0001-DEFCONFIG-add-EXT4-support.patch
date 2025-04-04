@@ -1,0 +1,32 @@
+From 0af431300f2295a5a29325554e426856f9a42669 Mon Sep 17 00:00:00 2001
+From: Apaczer <94932128+Apaczer@users.noreply.github.com>
+Date: Fri, 4 Apr 2025 23:18:56 +0200
+Subject: [PATCH] DEFCONFIG: add EXT4 support
+
+---
+ arch/arm/configs/miyoo_defconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/configs/miyoo_defconfig b/arch/arm/configs/miyoo_defconfig
+index 89454a7e8..afc1a2c72 100644
+--- a/arch/arm/configs/miyoo_defconfig
++++ b/arch/arm/configs/miyoo_defconfig
+@@ -125,6 +125,7 @@ CONFIG_PWM=y
+ CONFIG_PWM_SUNIV=y
+ CONFIG_PHY_SUN4I_USB=y
+ CONFIG_NVMEM_SUNXI_SID=y
++CONFIG_EXT4_FS=y
+ CONFIG_BTRFS_FS=y
+ CONFIG_VFAT_FS=y
+ CONFIG_TMPFS=y
+@@ -134,7 +135,6 @@ CONFIG_KEYS=y
+ # CONFIG_CRYPTO_MANAGER_DISABLE_TESTS is not set
+ CONFIG_CRYPTO_DRBG_MENU=y
+ # CONFIG_CRYPTO_HW is not set
+-CONFIG_CRC16=y
+ CONFIG_XZ_DEC=y
+ CONFIG_PRINTK_TIME=y
+ CONFIG_CONSOLE_LOGLEVEL_DEFAULT=4
+-- 
+2.34.1
+
