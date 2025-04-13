@@ -1,0 +1,28 @@
+From 2f03ff33df22293ccbcf5467d1d46ae3418b75b8 Mon Sep 17 00:00:00 2001
+From: Apaczer <94932128+Apaczer@users.noreply.github.com>
+Date: Mon, 14 Apr 2025 15:33:35 +0200
+Subject: [PATCH] mcopy: fix ovewrite existing files and copy hidden
+
+image-vfat
+---
+ image-vfat.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/image-vfat.c b/image-vfat.c
+index ed87b7f..43df799 100644
+--- a/image-vfat.c
++++ b/image-vfat.c
+@@ -72,8 +72,8 @@ static int vfat_generate(struct image *image)
+ 		return 0;
+ 
+ 	if (!image->empty)
+-		ret = systemp(image, "MTOOLS_SKIP_CHECK=1 %s -sp -i '%s' '%s'/* ::",
+-				get_opt("mcopy"), imageoutfile(image), mountpath(image));
++		ret = systemp(image, "MTOOLS_SKIP_CHECK=1 %s -sp -no -i '%s' '%s'/* '%s'/.[!.]* ::",
++				get_opt("mcopy"), imageoutfile(image), mountpath(image), mountpath(image));
+ 	return ret;
+ }
+ 
+-- 
+2.45.2.windows.1
+
