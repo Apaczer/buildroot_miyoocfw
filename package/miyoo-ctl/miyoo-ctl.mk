@@ -1,4 +1,4 @@
-MIYOO_CTL_VERSION = origin/master
+MIYOO_CTL_VERSION = ac6993e8cde2f03640aaff648c50d6c7c4626357
 MIYOO_CTL_SITE_METHOD = git
 MIYOO_CTL_SITE = https://github.com/MiyooCFW/miyooctl.git
 

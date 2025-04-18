@@ -1,4 +1,4 @@
-MIYOO_DAEMON_VERSION = origin/master
+MIYOO_DAEMON_VERSION = 21da957cbe9e43eeceb093f7825e57592ca094b1
 MIYOO_DAEMON_SITE_METHOD = git
 MIYOO_DAEMON_SITE = https://github.com/MiyooCFW/daemon.git
 

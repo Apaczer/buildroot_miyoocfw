@@ -1,4 +1,4 @@
-MIYOO_LOGO_VERSION = origin/master
+MIYOO_LOGO_VERSION = cc38c85db630b847fd3a4fe6b2b1555f9d93287b
 MIYOO_LOGO_SITE_METHOD = git
 MIYOO_LOGO_SITE = https://github.com/MiyooCFW/logo.git
 MIYOO_LOGO_DEPENDENCIES = sdl sdl_image sdl_mixer sdl_sound sdl_ttf mpg123
