@@ -86,9 +86,19 @@ if test -d "${BINARIES_DIR}/retroarch"; then
 	done
 fi
 
+# Generate SWAP image & place it in MAIN
+image_swap="${BINARIES_DIR}/main/swap.img"
+dd if=/dev/zero of="${image_swap}" bs=1M count=256
+
 # Generate MAIN BTRFS partition
 image="${BINARIES_DIR}/main.img"
 label="MAIN"
 mkfs.btrfs -r "${BINARIES_DIR}/main/" --shrink -v -f -L ${label} ${image}
+
+# Generate ROMS EXT4 partition
+image_roms="${BINARIES_DIR}/roms.img"
+label_roms="ROMS"
+dd if=/dev/zero of=${image_roms} bs=1M count=125
+mkfs.ext4 -d "${BINARIES_DIR}/roms/" -v -L ${label_roms} ${image_roms}
 
 support/scripts/genimage.sh ${1} -c board/miyoo/genimage-sdcard.cfg

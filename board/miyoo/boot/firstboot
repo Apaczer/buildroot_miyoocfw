@@ -500,8 +500,8 @@ if (dialog --backtitle "MiyooCFW 2.0" --no-shadow --clear --ok-label NO --cancel
 fi
 
 # Format swap parition
-/sbin/mkswap /dev/mmcblk0p3
-/sbin/swapon /dev/mmcblk0p3
+/sbin/mkswap "${HOME}/swap.img"
+/sbin/swapon "${HOME}/swap.img"
 
 mount -o remount,ro "${MOUNTDIR}" | tee -a ${LOG}
 
