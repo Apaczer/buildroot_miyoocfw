@@ -96,7 +96,8 @@ image="${BINARIES_DIR}/main.img"
 label="MAIN"
 mkfs.btrfs -r "${BINARIES_DIR}/main/" --shrink -v -f -L ${label} ${image}
 
-# Generate ROMS EXT4 partition
+# Generate ROMS EXT4 partition and create dir at mount point
+! test -d "${TARGET_DIR}/roms" && mkdir ${TARGET_DIR}/roms
 image_roms="${BINARIES_DIR}/roms.img"
 label_roms="ROMS"
 dd if=/dev/zero of=${image_roms} bs=1M count=125
