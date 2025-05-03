@@ -56,6 +56,7 @@ export IMAGE_NAME="${BR2_VENDOR}-${CFW_TYPE}-${CFW_RELEASE}-${CFW_HASH}_${LIBC}-
 # Relocate board files for genimage-sdcard config to read (see last cmd)
 cp -r board/miyoo/boot "${BINARIES_DIR}"
 cp -r board/miyoo/main "${BINARIES_DIR}"
+cp -r board/miyoo/roms "${BINARIES_DIR}"
 
 # Write CFW version to splash image
 convert board/miyoo/miyoo-splash.png -pointsize 12 -fill white -annotate +10+230 "v${CFW_RELEASE} ${CFW_VERSION} (${LIBC}) ${STATUS}${APPEND_VERSION}" -type Palette -colors 224 -depth 8 -compress none -verbose BMP3:"${BINARIES_DIR}"/boot/miyoo-splash.bmp
