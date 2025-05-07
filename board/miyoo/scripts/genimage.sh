@@ -88,8 +88,8 @@ if test -d "${BINARIES_DIR}/retroarch"; then
 fi
 
 # Generate SWAP image & place it in MAIN
-image_swap="${BINARIES_DIR}/main/swap.img"
-dd if=/dev/zero of="${image_swap}" bs=1M count=256
+## image_swap="${BINARIES_DIR}/mnt/swap.img"
+## dd if=/dev/zero of="${image_swap}" bs=1M count=256
 
 # Generate MAIN BTRFS partition
 image="${BINARIES_DIR}/main.img"

@@ -499,7 +499,11 @@ if (dialog --backtitle "MiyooCFW 2.0" --no-shadow --clear --ok-label NO --cancel
 	safe_poweroff_func
 fi
 
-# Format swap parition
+# Format swapfile on BTRFS
+truncate -s 0 "${HOME}/swap.img"
+chattr +C "${HOME}/swap.img"
+fallocate -l 256M "${HOME}/swap.img"
+chmod 0600 "${HOME}/swap.img"
 /sbin/mkswap "${HOME}/swap.img"
 /sbin/swapon "${HOME}/swap.img"
 
