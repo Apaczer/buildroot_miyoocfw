@@ -51,12 +51,9 @@ NETSURF_FRONTEND = framebuffer
 NETSURF_CONFIG = \
 	BUILD_CFLAGS='$(HOST_CFLAGS)' \
 	BUILD_LDFLAGS='$(HOST_LDFLAGS) -lpng'
-ifeq ($(BR2_PACKAGE_FREETYPE),y)
-NETSURF_DEPENDENCIES += freetype
 define NETSURF_FONTLIB_CONFIGURE_CMDS
-	echo "override NETSURF_FB_FONTLIB := freetype"  >> $(@D)/netsurf/Makefile.config
+	echo "override NETSURF_FB_FONTLIB := internal"  >> $(@D)/netsurf/Makefile.config
 endef
-endif
 endif
 
 ifeq ($(BR2_PACKAGE_LIBICONV),y)
