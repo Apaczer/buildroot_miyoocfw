@@ -54,6 +54,12 @@ NETSURF_CONFIG = \
 define NETSURF_FONTLIB_CONFIGURE_CMDS
 	echo "override NETSURF_FB_FONTLIB := internal"  >> $(@D)/netsurf/Makefile.config
 endef
+ifeq ($(BR2_PACKAGE_GSTREAMER1),y)
+NETSURF_DEPENDENCIES += gstreamer1
+define NETSURF_GSTREAMER_CONFIGURE_CMDS
+	echo "override NETSURF_USE_VIDEO := YES"        >> $(@D)/netsurf/Makefile.config
+endef
+endif
 endif
 
 ifeq ($(BR2_PACKAGE_LIBICONV),y)
@@ -91,6 +97,7 @@ define NETSURF_CONFIGURE_CMDS
 	$(NETSURF_FONTLIB_CONFIGURE_CMDS)
 	$(NETSURF_CURL_CONFIGURE_CMDS)
 	$(NETSURF_WEBP_CONFIGURE_CMDS)
+	$(NETSURF_GSTREAMER_CONFIGURE_CMDS)
 endef
 
 NETSURF_MAKE_ENV = \

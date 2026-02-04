@@ -1,0 +1,15 @@
+diff --git a/netsurf/frontends/framebuffer/Makefile b/netsurf/frontends/framebuffer/Makefile
+index 499e539..e035afb 100644
+--- a/netsurf/frontends/framebuffer/Makefile
++++ b/netsurf/frontends/framebuffer/Makefile
+@@ -28,6 +28,10 @@ CFLAGS += '-DNETSURF_FB_FONT_FANTASY="$(NETSURF_FB_FONT_FANTASY)"'
+ 
+ LDFLAGS += -lm
+ 
++ifeq ($(NETSURF_USE_VIDEO),YES)
++  $(eval $(call pkg_config_find_and_add_enabled,VIDEO,gstreamer-1.0,Video))
++endif
++
+ # freetype is optional but older versions do not use pkg-config
+ ifeq ($(NETSURF_FB_FONTLIB),freetype)
+   NETSURF_USE_FREETYPE2 := AUTO
