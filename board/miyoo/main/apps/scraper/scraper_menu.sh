@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/busybox sh
 #echo $0 $*    # for debugging
 
 # Requires ShellectApp=/usr/bin/shellect
@@ -8,69 +8,55 @@ if ! command -v shellect > /dev/null; then
 	exit
 fi
 
-#external (imported) variables:
+# external (imported) variables:
 DEBUG=${DEBUG:="no"}
-PC_DEBUG=${PC_DEBUG:=""}
-ROMS=${ROMS:="/roms"}
 BOXART_DIR=${BOXART_DIR:=".images"}
-if ! test -z ${PC_DEBUG}; then
-	DEBUG="yes"
-	HOME=${HOME:="/home"}
-else
-	HOME=${HOME:="/mnt"}
-fi
+HOME=${HOME:="/mnt"}
+ROMS=${ROMS:="/roms"}
 
-#internal (exported) variables
-if test -z "${PC_DEBUG}"; then
-	export ScraperConfigFile=${HOME}/apps/scraper/.scraper.cfg
-	export ScraperApp=${HOME}/apps/scraper/scraper_libretro.sh
-else
-	export ScraperConfigFile=${HOME}/.scraper.cfg
-	export ScraperApp=scraper_libretro.sh
-fi
+# internal (exported) variables
+export ScraperConfigDirPath=${ScraperConfigDirPath:="${HOME}/.scraper"}
+export ScraperConfigFile=${ScraperConfigFile:="scraper.cfg"}
+export ScraperApp=${ScraperApp:="$(dirname "$(realpath "$0")")"/scraper_libretro.sh}
+export DEBUG
 
-#global funcitons
+# global functions
 ## POSIX doesn't allow exporting func. !!
 wait_msg() {
-	if ! test -z ${PC_DEBUG}; then
-		sleep 3
-	else
 	## read is different in POSIX shell (should work on BusyBox)
-		read -n 1 -s -r -p "Press START to continue"
-	fi
+	read -n 1 -s -r -p "Press START to continue"
+	echo
 }
 
 echo_psx() {
-	if ! test -z ${PC_DEBUG}; then
-		#echo in real POSIX shell does't use opt parameters like `-e` (only \n in [string])
-		echo "$1"
-	else
-		#echo with in BUSYBOX is more like dash, need to use `-e` opt and add escape operands like \n
-		echo -e "$1"
-	fi
+	#echo within BUSYBOX needs to use `-e` opt for escape operands like \n
+	echo -e "$1"
 }
 
 if [ -z "$1" ]; then
-	#for PC_DEBUG run e.g. ROMS=/home/roms PC_DEBUG=1 ./scraper_menu.sh ./roms/NES/Battletoads\ \(USA\).nes
 	echo_psx "\nusage : scraper_menu.sh [ROM_PATH]\nexample : scraper_menu.sh /roms/NES/Battletoads\ \(USA\).nes\n"
 	exit
 fi
 
-#internal variables
+# internal variables
 romname=$(basename "$1")
-CurrentSystem=$(echo "$(realpath $1)" | grep -o "/$(basename ${ROMS})/[^/]*" | cut -d'/' -f3)
+#CurrentSystem=$(echo "$(realpath $1)" | grep -o "/$(basename ${ROMS})/[^/]*" | cut -d'/' -f3)
+CurrentSystem=$(basename "$(dirname "$(realpath "$1")")")
 romNameNoExtension=${romname%.*}
 romimage="${ROMS}/$CurrentSystem/${BOXART_DIR}/$romNameNoExtension.png"
 
 # Check if the configuration file exists
-if [ ! -f "$ScraperConfigFile" ]; then
-	echo "Warning: configuration file not found, creating default in ${ScraperConfigFile}"
+if [ ! -f "${ScraperConfigDirPath}/$ScraperConfigFile" ]; then
+	echo "Warning: configuration file not found, creating default in ${ScraperConfigDirPath}/${ScraperConfigFile}"
+	! test -d "${ScraperConfigDirPath}" && mkdir -p "${ScraperConfigDirPath}"
 	wait_msg
-	echo "LibretroMedia_type = \"Named_Boxarts\"" > ${ScraperConfigFile}
+	echo "LibretroMedia_type = \"Named_Boxarts\"" > "${ScraperConfigDirPath}/${ScraperConfigFile}"
 fi
 
-# for debugging
 if test x"${DEBUG}" = xyes; then
+	echo -en "running $0 in debug mode \n"
+	echo "ScraperApp : $ScraperApp"
+	echo
 	echo "CurrentSystem : $CurrentSystem"
 	echo "romname : $romname"
 	echo "romimage : $romimage"
@@ -140,7 +126,7 @@ Launch_Scraping() {
 	wait_msg
 
 	# run the Libretro Scraper script
-	${ScraperApp} $CurrentSystem "$onerom"
+	${ScraperApp} "$CurrentSystem" "$onerom"
 
 	if [ -f "$romimage" ] && ! [ "$onerom" = "" ] ; then
 		echo "exiting $romimage"

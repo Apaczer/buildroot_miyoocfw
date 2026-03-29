@@ -1,60 +1,43 @@
-#!/bin/sh
+#!/bin/busybox sh
 #echo $0 $*    # for debugging
 
-## Externel arg. variables
+# Externel arg. variables
 current_system=$1
 current_rom="$2"
 
-## External (imported) variables
+# External (imported) variables
 DEBUG=${DEBUG:="no"}
-PC_DEBUG=${PC_DEBUG:=""}
 NO_SHELLECT=${NO_SHELLECT:=false}
 BOXART_DIR=${BOXART_DIR:=".images"}
-if ! test -z ${PC_DEBUG}; then
-	DEBUG="yes"
-	ScraperConfigFile=${ScraperConfigFile:="${HOME}/.scraper.cfg"}
-	HOME=${HOME:="/home"}
-	ROMS=${ROMS:="${HOME}/roms"}
-else
-	ScraperConfigFile=${ScraperConfigFile:="${HOME}/apps/scraper/.scraper.cfg"}
-	HOME=${HOME:="/mnt"}
-	ROMS=${ROMS:="/roms"}
-fi
+HOME=${HOME:="/mnt"}
+ROMS=${ROMS:="${HOME}/roms"}
+ScraperConfigDirPath=${ScraperConfigDirPath:="${HOME}/.scraper"}
+ScraperConfigFile=${ScraperConfigFile:="scraper.cfg"}
 
 # global functions
 wait_msg() {
-	if ! test -z ${PC_DEBUG}; then
-		sleep 3
-	else
 	## read is different in POSIX shell (should work on BusyBox)
-		read -n 1 -s -r -p "Press START to continue"
-	fi
+	read -n 1 -s -r -p "Press START to continue"
+	echo
 }
 
 echo_psx() {
-	if ! test -z ${PC_DEBUG}; then
-		#echo in real POSIX shell doesn't use opt parameters like `-e` (only \n in [string])
-		echo "$1"
-	else
-		#echo with in BUSYBOX is more like dash, need to use `-e` opt and add escape operands like \n
-		echo -e "$1"
-	fi
+	#echo within BUSYBOX needs to use `-e` opt for escape operands like \n
+	echo -e "$1"
 }
 
 if test x"$DEBUG" = "xyes"; then
-	echo "DEBUG=$DEBUG"
-	echo "PC_DEBUG=$PC_DEBUG"
-	echo "ROMS=$ROMS\n"
+	echo -en "running $0 in debug mode \n"
+	echo -e "ROMS=$ROMS\n"
 	echo "current_system=${current_system}"
-	echo "current_rom=${current_rom}\n"
+	echo -e "current_rom=${current_rom}\n"
 	wait_msg
 fi
 
 if [ -z "$1" ]; then
-	echo_psx "\nusage : scraper_libretro.sh emu_folder_name [rom_name]"
+	echo_psx "\nusage : scraper_libretro.sh system_name(roms_dirname) [rom_name]"
 	echo_psx "example_1 : ./scraper_libretro.sh NES"
 	echo_psx "example_2 : ./scraper_libretro.sh NES Battletoads\ \(USA\).nes\n"
-	#for PC_DEBUG run e.g.: ROMS=/home/roms PC_DEBUG=1 scraper_libretro.sh NES Battletoads\ \(USA\).nes
 	exit
 fi
 
@@ -201,8 +184,8 @@ echo_psx "\n*****************************************************"
 echo_psx "************** LIBRETRO Thumbnails ********************"
 echo_psx "*****************************************************\n\n"
 
-if test -f "${ScraperConfigFile}"; then
-	media_type="$(sed -n 's:^LibretroMedia_type = ::p' "${ScraperConfigFile}" | tr -d '"')"
+if test -f "${ScraperConfigDirPath}/${ScraperConfigFile}"; then
+	media_type="$(sed -n 's:^LibretroMedia_type = ::p' "${ScraperConfigDirPath}/${ScraperConfigFile}" | tr -d '"')"
 else
 	media_type="Named_Boxarts"
 fi
