@@ -67,16 +67,22 @@ fi
 ##########################################################################################
 
 Menu_Config() {
-	Option1="Media preferences"
-	Option2="Back to Main Menu"
+	Option1="Media preferences" #media type (libretro-thumbnails)
+	Option2="Media resizing" #vipsthumbnail (libvips)
+	Option3="Media optimizing" #pngquant
+	Option4="Fuzzy matching" #fzy
+	Option5="Back to Main Menu"
 
 	top_msg="      --== CONFIGURATION MENU ==--"
 	bottom_msg="Press Start/Y/Right to select."
 
-	Mychoice=$( echo_psx "$Option1\n$Option2" | shellect -t "$top_msg" -b "$bottom_msg")
+	Mychoice=$( echo_psx "$Option1\n$Option2\n$Option3\n$Option4\n$Option5" | shellect -t "$top_msg" -b "$bottom_msg")
 
 	[ "$Mychoice" = "$Option1" ] && Menu_Config_MediaType
-	[ "$Mychoice" = "$Option2" ] && Menu_Main
+	[ "$Mychoice" = "$Option2" ] && Menu_Config_MediaResize
+	[ "$Mychoice" = "$Option3" ] && Menu_Config_MediaOptimize
+	[ "$Mychoice" = "$Option4" ] && Menu_Config_FuzzyMatch
+	[ "$Mychoice" = "$Option5" ] && Menu_Main
 }
 
 Menu_Config_MediaType() {
